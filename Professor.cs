@@ -1,5 +1,4 @@
-﻿using ReaLTaiizor.Colors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,19 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using MySql.Data.MySqlClient;
+using System.Xml.Linq;
 using ReaLTaiizor.Forms;
 using ReaLTaiizor.Controls;
-using MySql.Data.MySqlClient;
-using System.Diagnostics;
 
 namespace Projeto4
 {
-    public partial class Cadastro : MaterialForm
+    public partial class Professor : MaterialForm
     {
         bool isAlteracao = false;
         string cs = @"server=localhost;uid=root;pwd=;database=academico";
-        public Cadastro()
+        public Professor()
         {
             InitializeComponent();
         }
@@ -33,7 +31,6 @@ namespace Projeto4
                 materialTabControl1.SelectedIndex = 1;
             }
         }
-
         private void Salvar()
         {
             var con = new MySqlConnection(cs);
@@ -42,14 +39,14 @@ namespace Projeto4
             if (!isAlteracao)
             {
 
-                sql = "INSERT INTO aluno(matricula, data_nasc, nome, endereco, bairro, cidade, estado, senha) VALUES (@matricula, @data_nasc, @nome, @endereco, @bairro, @cidade, @estado, @senha)";
+                sql = "INSERT INTO professor(matricula, data_nasc, nome, endereco, bairro, cidade, estado, titulacao, area_formacao) VALUES (@matricula, @data_nasc, @nome, @endereco, @bairro, @cidade, @estado, @titulacao, @area_formacao)";
 
             }
             else
             {
 
 
-             sql = "UPDATE aluno set matricula = @matricula, data_nasc = @data_nasc, nome = @nome, endereco = @endereco, bairro = @bairro, cidade = @cidade, estado = @estado, senha = @senha WHERE ID = @ID";
+                sql = "UPDATE professor set matricula = @matricula, data_nasc = @data_nasc, nome = @nome, endereco = @endereco, bairro = @bairro, cidade = @cidade, estado = @estado, area_formacao = @area_formacao, titulacao = @titulacao WHERE ID = @ID";
 
             }
             var cmd = new MySqlCommand(sql, con);
@@ -60,8 +57,9 @@ namespace Projeto4
             cmd.Parameters.AddWithValue("@endereco", txtEndereco.Text);
             cmd.Parameters.AddWithValue("@bairro", txtBairro.Text);
             cmd.Parameters.AddWithValue("@cidade", txtCidade.Text);
-            cmd.Parameters.AddWithValue("@estado", cmbEstado.Text);
-            cmd.Parameters.AddWithValue("@senha", txtSenha.Text);
+            cmd.Parameters.AddWithValue("@estado", cboEstado.Text);
+            cmd.Parameters.AddWithValue("@titulacao", cboTitulacao.Text);
+            cmd.Parameters.AddWithValue("@area_formacao", txtArea.Text);
             if (isAlteracao)
             {
                 cmd.Parameters.AddWithValue("@ID", txtID.Text);
@@ -103,18 +101,19 @@ namespace Projeto4
                 txtBairro.Focus();
                 return false;
             }
+            if (string.IsNullOrEmpty(txtArea.Text))
+            {
+                MessageBox.Show("Area é obrigatório", "IFSP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtArea.Focus();
+                return false;
+            }
             if (string.IsNullOrEmpty(txtCidade.Text))
             {
                 MessageBox.Show("Cidade é obrigatória", "IFSP", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtCidade.Focus();
                 return false;
             }
-            if (string.IsNullOrEmpty(txtSenha.Text))
-            {
-                MessageBox.Show("Senha é obrigatória", "IFSP", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtSenha.Focus();
-                return false;
-            }
+
             return true;
         }
         private void LimpaCampos()
@@ -133,11 +132,15 @@ namespace Projeto4
             }
         }
 
+        private void dataGridView1_Enter(object sender, EventArgs e)
+        {
+            CarregaGrid();
+        }
         private void CarregaGrid()
         {
             var con = new MySqlConnection(cs);
             con.Open();
-            var sql = "SELECT * FROM aluno";
+            var sql = "SELECT * FROM professor";
             var sqlAd = new MySqlDataAdapter();
             sqlAd.SelectCommand = new MySqlCommand(sql, con);
             var dt = new DataTable();
@@ -146,26 +149,20 @@ namespace Projeto4
             dataGridView1.DataSource = dt;
         }
 
-        private void dataGridView1_Enter(object sender, EventArgs e)
-        {
-            CarregaGrid();
-
-        }
-
         private void btnExcluir_Click(object sender, EventArgs e)
         {
-            if(dataGridView1.SelectedRows.Count > 0)
+            if (dataGridView1.SelectedRows.Count > 0)
             {
-                if(MessageBox.Show("Deseja realmente deletar?", "IFSP",MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("Deseja realmente deletar?", "IFSP", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     int id = (int)dataGridView1.SelectedRows[0].Cells[0].Value;
-                    Deletar(id); 
+                    Deletar(id);
                     CarregaGrid();
                 }
             }
             else
             {
-                MessageBox.Show("Seleciona algum aluno!", "IFSP", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleciona algum professor!", "IFSP", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -174,25 +171,23 @@ namespace Projeto4
             var con = new MySqlConnection(cs);
             con.Open();
 
-                var sql = "DELETE FROM ALUNO WHERE id = @id";
-                var cmd = new MySqlCommand(sql, con);
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.Prepare();
+            var sql = "DELETE FROM professor WHERE id = @id";
+            var cmd = new MySqlCommand(sql, con);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
-                cmd.ExecuteNonQuery();
-           
+            cmd.ExecuteNonQuery();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
         {
             Editar();
         }
-
         private void Editar()
         {
-            if(dataGridView1.SelectedRows.Count > 0)
+            if (dataGridView1.SelectedRows.Count > 0)
             {
-                isAlteracao= true;
+                isAlteracao = true;
                 var linha = dataGridView1.SelectedRows[0];
                 txtID.Text = linha.Cells["id"].Value.ToString();
                 txtMatricula.Text = linha.Cells["matricula"].Value.ToString();
@@ -200,18 +195,20 @@ namespace Projeto4
                 txtEndereco.Text = linha.Cells["endereco"].Value.ToString();
                 txtBairro.Text = linha.Cells["bairro"].Value.ToString();
                 txtCidade.Text = linha.Cells["cidade"].Value.ToString();
-                txtSenha.Text = linha.Cells["senha"].Value.ToString();
+                txtArea.Text = linha.Cells["area_formacao"].Value.ToString();
                 txtData.Text = linha.Cells["data_nasc"].Value.ToString();
-                cmbEstado.Text = linha.Cells["estado"].Value.ToString();
-                materialTabControl1.SelectedIndex = 0;  
+                cboEstado.Text = linha.Cells["estado"].Value.ToString();
+                cboTitulacao.Text = linha.Cells["titulacao"].Value.ToString();
+                materialTabControl1.SelectedIndex = 0;
                 txtMatricula.Focus();
 
             }
             else
             {
-                MessageBox.Show("Seleciona algum aluno!", "IFSP", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleciona algum professor!", "IFSP", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
         private void btnNovo_Click(object sender, EventArgs e)
         {
             LimpaCampos();
@@ -223,6 +220,5 @@ namespace Projeto4
         {
             Editar();
         }
-
     }
 }

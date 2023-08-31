@@ -31,6 +31,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.cadastroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alunosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cursoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.professoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,7 +49,9 @@
             // cadastroToolStripMenuItem
             // 
             this.cadastroToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.alunosToolStripMenuItem});
+            this.alunosToolStripMenuItem,
+            this.cursoToolStripMenuItem,
+            this.professoresToolStripMenuItem});
             this.cadastroToolStripMenuItem.Name = "cadastroToolStripMenuItem";
             this.cadastroToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
             this.cadastroToolStripMenuItem.Text = "Cadastro";
@@ -55,9 +59,23 @@
             // alunosToolStripMenuItem
             // 
             this.alunosToolStripMenuItem.Name = "alunosToolStripMenuItem";
-            this.alunosToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.alunosToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.alunosToolStripMenuItem.Text = "Alunos";
             this.alunosToolStripMenuItem.Click += new System.EventHandler(this.alunosToolStripMenuItem_Click);
+            // 
+            // cursoToolStripMenuItem
+            // 
+            this.cursoToolStripMenuItem.Name = "cursoToolStripMenuItem";
+            this.cursoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cursoToolStripMenuItem.Text = "Curso";
+            this.cursoToolStripMenuItem.Click += new System.EventHandler(this.cursoToolStripMenuItem_Click);
+            // 
+            // professoresToolStripMenuItem
+            // 
+            this.professoresToolStripMenuItem.Name = "professoresToolStripMenuItem";
+            this.professoresToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.professoresToolStripMenuItem.Text = "Professores";
+            this.professoresToolStripMenuItem.Click += new System.EventHandler(this.professoresToolStripMenuItem_Click);
             // 
             // Principal
             // 
@@ -83,5 +101,7 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem cadastroToolStripMenuItem;
         private ToolStripMenuItem alunosToolStripMenuItem;
+        private ToolStripMenuItem cursoToolStripMenuItem;
+        private ToolStripMenuItem professoresToolStripMenuItem;
     }
 }

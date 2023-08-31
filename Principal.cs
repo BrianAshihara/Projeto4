@@ -21,5 +21,20 @@ namespace Projeto4
                 e.Cancel = true;
             }
         }
+
+        private void cursoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Curso curso = new Curso();
+            curso.MdiParent = this;
+            curso.Show();
+
+        }
+
+        private void professoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Professor professor = new Professor();
+            professor.MdiParent = this;
+            professor.Show();
+        }
     }
 }
