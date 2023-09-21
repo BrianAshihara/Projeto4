@@ -11,17 +11,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using ReaLTaiizor.Forms;
-using Spire.Pdf;
 using Spire.Pdf.Graphics;
 using Spire.Pdf.Tables;
-
+using Spire.Pdf;
 
 namespace Projeto4
 {
-    public partial class FormRelatorioAluno : MaterialForm
+    public partial class FormRelatorioProfessor : MaterialForm
     {
         string cs = @"server=localhost;uid=root;pwd=;database=academico";
-        public FormRelatorioAluno()
+        public FormRelatorioProfessor()
         {
             InitializeComponent();
             CarregaImpressoras();
@@ -32,43 +31,39 @@ namespace Projeto4
 
         }
 
-        private void FormRelatorioAluno_Load(object sender, EventArgs e)
-        {
-
-        }
         private void CarregaImpressoras()
         {
             foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
-            { 
-                cboImpressora.Items.Add(printer);  
+            {
+                cboImpressora.Items.Add(printer);
             }
         }
-
         private void MontaRelatorio()
         {
             var con = new MySqlConnection(cs);
             con.Open();
-            var sql = "SELECT * FROM aluno WHERE 1 = 1";
+            var sql = "SELECT * FROM professor WHERE 1 = 1";
 
-            if (cboEstado.Text != "")
+            if (cboTitulo.Text != "")
             {
-                sql += " and estado = @estado";
+                sql += " and estado = @titulacao";
             }
 
-            if (txtCidade.Text != "")
+            if (txtArea.Text != "")
             {
-                sql += " and cidade = @cidade";
+                sql += " and cidade = @area_formacao";
             }
             var sqlAd = new MySqlDataAdapter();
             sqlAd.SelectCommand = new MySqlCommand(sql, con);
 
-            if (cboEstado.Text != "") {
-                sqlAd.SelectCommand.Parameters.AddWithValue("@estado", cboEstado.Text);
+            if (cboTitulo.Text != "")
+            {
+                sqlAd.SelectCommand.Parameters.AddWithValue("@titulacao", cboTitulo.Text);
             }
 
-            if (txtCidade.Text != "")
+            if (txtArea.Text != "")
             {
-                sqlAd.SelectCommand.Parameters.AddWithValue("@cidade", txtCidade.Text);
+                sqlAd.SelectCommand.Parameters.AddWithValue("@area_formacao", txtArea.Text);
             }
             var dt = new DataTable();
             sqlAd.Fill(dt);
@@ -79,36 +74,37 @@ namespace Projeto4
             sec.PageSettings.Width = PdfPageSize.A4.Width;
             PdfPageBase page = sec.Pages.Add();
             int y = 20;
-            PdfBrush brush1= PdfBrushes.Black;
+            PdfBrush brush1 = PdfBrushes.Black;
             PdfTrueTypeFont font1 = new PdfTrueTypeFont(new Font("Arial", 16f, FontStyle.Bold));
             PdfStringFormat format1 = new PdfStringFormat(PdfTextAlignment.Center);
 
-            page.Canvas.DrawString("Relatório de Alunos", font1, brush1, page.Canvas.ClientSize.Width / 2, y, format1);
+            page.Canvas.DrawString("Relatório de Professores", font1, brush1, page.Canvas.ClientSize.Width / 2, y, format1);
 
-            PdfTable table= new PdfTable();   
-            table.Style.CellPadding= 2;
+            PdfTable table = new PdfTable();
+            table.Style.CellPadding = 2;
             table.Style.BorderPen = new PdfPen(brush1, 0.75f);
-            table.Style.HeaderStyle.StringFormat= new PdfStringFormat(PdfTextAlignment.Center);
+            table.Style.HeaderStyle.StringFormat = new PdfStringFormat(PdfTextAlignment.Center);
             table.Style.HeaderSource = PdfHeaderSource.ColumnCaptions;
-            table.Style.HeaderRowCount= 1;
+            table.Style.HeaderRowCount = 1;
             table.Style.HeaderStyle.BackgroundBrush = PdfBrushes.CadetBlue;
-            table.Style.ShowHeader= true;
+            table.Style.ShowHeader = true;
             table.DataSource = dt;
-            foreach (PdfColumn col in table.Columns) { 
+            foreach (PdfColumn col in table.Columns)
+            {
                 col.StringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
             }
-            table.Draw(page, new Point(0, y+30));
+            table.Draw(page, new Point(0, y + 30));
 
 
-            doc.SaveToFile("Relatório de Alunos.pdf");
+            doc.SaveToFile("Relatório de Professores.pdf");
         }
 
-        private void btnImprimir_Click(object sender, EventArgs e)
+        private void btnImprimir_Click_1(object sender, EventArgs e)
         {
             MontaRelatorio();
             //envia para impressora
 
-            string pdfFilePath = @"D:\Brian Ashihara\Projeto4\bin\Debug\net7.0-windows\Relatório de Alunos.pdf";
+            string pdfFilePath = @"D:\Brian Ashihara\Projeto4\bin\Debug\net7.0-windows\Relatório de Professores.pdf";
             PrintDocument printDocument = new PrintDocument();
             printDocument.PrintPage += (sender, e) =>
             {
@@ -123,20 +119,16 @@ namespace Projeto4
             // Imprimir o documento PDF na impressora padrão
             printDocument.Print();
 
-
-
         }
 
-        private void btnVisualizar_Click(object sender, EventArgs e)
+        private void btnVisualizar_Click_1(object sender, EventArgs e)
         {
-
-                var p = new Process();
-                p.StartInfo = new ProcessStartInfo(@"Relatório de Alunos.pdf")
-                {
-                    UseShellExecute = true
-                };
-                p.Start();
-            }
-
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo(@"Relatório de Professores.pdf")
+            {
+                UseShellExecute = true
+            };
+            p.Start();
         }
     }
+}

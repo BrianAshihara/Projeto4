@@ -43,6 +43,20 @@ namespace Projeto4
             formrelatorioalunos.MdiParent = this;
             formrelatorioalunos.Show();
         }
-        
+
+        private void professorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            FormRelatorioProfessor formrelatorioprofessor = new FormRelatorioProfessor();
+            formrelatorioprofessor.MdiParent = this;
+            formrelatorioprofessor.Show();
+        }
+
+        private void cursoToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FormRelatorioCurso formrelatoriocurso = new FormRelatorioCurso();
+            formrelatoriocurso.MdiParent = this;
+            formrelatoriocurso.Show();
+        }
     }
 }
