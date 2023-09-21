@@ -542,6 +542,7 @@
             this.Controls.Add(this.materialTabControl1);
             this.DrawerTabControl = this.materialTabControl1;
             this.Name = "Cadastro";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cadastro";
             this.materialTabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

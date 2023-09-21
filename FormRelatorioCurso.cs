@@ -46,12 +46,12 @@ namespace Projeto4
 
             if (txtAno.Text != "")
             {
-                sql += " and estado = @ano_criacao";
+                sql += " and ano_criacao = @ano_criacao";
             }
 
             if (cboTitulo.Text != "")
             {
-                sql += " and cidade = @tipo";
+                sql += " and tipo = @tipo";
             }
             var sqlAd = new MySqlDataAdapter();
             sqlAd.SelectCommand = new MySqlCommand(sql, con);
@@ -120,6 +120,7 @@ namespace Projeto4
 
         private void btnVisualizar_Click(object sender, EventArgs e)
         {
+            MontaRelatorio();
             var p = new Process();
             p.StartInfo = new ProcessStartInfo(@"Relatório de Cursos.pdf")
             {

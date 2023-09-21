@@ -236,6 +236,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "FormRelatorioCurso";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Relatorio de Curso";
             this.Load += new System.EventHandler(this.FormRelatorioCurso_Load);
             this.groupBox3.ResumeLayout(false);

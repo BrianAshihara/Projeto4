@@ -129,7 +129,7 @@ namespace Projeto4
 
         private void btnVisualizar_Click(object sender, EventArgs e)
         {
-
+                MontaRelatorio();
                 var p = new Process();
                 p.StartInfo = new ProcessStartInfo(@"Relatório de Alunos.pdf")
                 {
